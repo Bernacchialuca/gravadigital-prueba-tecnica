@@ -9,6 +9,7 @@ function validateFields(req, res, next) {
     const schema = Joi.object({
         color: Joi.string().valid('red', 'green', 'blue').required(),
         email: Joi.string().required().email(),
+        enabled: Joi.boolean(),
         UserInformation: Joi.object({
             name: Joi.string().min(3).required(),
             lastName: Joi.string().required(),
@@ -27,7 +28,7 @@ function validateFields(req, res, next) {
 }
 
 async function createUserInformation(req, res, next) {
-   
+
     const body = req.body.UserInformation;
 
     try {
@@ -37,7 +38,7 @@ async function createUserInformation(req, res, next) {
             dni: body.dni,
             age: body.age
         });
-    
+
         req.userInformation = result;
         return next();
 
@@ -50,11 +51,13 @@ async function createUserInformation(req, res, next) {
 
 async function saveUser(req, res) {
 
+    const body = req.body;
+
     try {
         const newUser = new User({
-            email: req.body.email,
-            color: req.body.color,
-            enabled: req.body.enabled,
+            email: body.email,
+            color: body.color,
+            enabled: body.enabled,
             userInformation: req.userInformation._id
         });
 
