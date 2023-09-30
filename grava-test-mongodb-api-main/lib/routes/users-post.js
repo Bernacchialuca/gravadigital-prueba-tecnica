@@ -73,6 +73,29 @@ async function saveUser(req, res) {
     }
 }
 
+async function disableUser(req, res) {
+    try {
+        
+        const userId = req.params.id;
+    
+        const user = await User.findById(userId);
+    
+        if (!user || !user.enabled) {
+            return res.status(400).json({ error: 'El usuario no existe o ya está deshabilitado.' });
+        }
+    
+        user.enabled = false;
+        await user.save();
+    
+        return res.status(200).json({ message: 'Usuario deshabilitado con éxito.' });
+    } catch (error) {
+        console.error('Error al deshabilitar usuario:', error);
+        return res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+}
+
+
 router.post('/users', validateFields, createUserInformation, saveUser);
+router.post('/users/:id/disable', disableUser);
 
 module.exports = router;
