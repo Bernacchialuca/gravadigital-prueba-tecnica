@@ -7,9 +7,10 @@ const routes = require('./lib/routes');
 const expressWinston = require('express-winston');
 const app = express();
 const cors = require('cors');
+const mongoose = require('mongoose');
 
 function connectMongoose() {
-    const mongoose = require('mongoose');
+
     mongoose.Promise = Promise;
     return mongoose.connect(
         `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DB}`
@@ -26,20 +27,20 @@ function initialize() {
     }));
     app.use(cors());
     app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: false}));
+    app.use(bodyParser.urlencoded({ extended: false }));
     app.use(cookieParser());
 
     Object.keys(routes).forEach((key) => {
         app.use('/api', routes[key]);
     });
 
-    app.use(function(req, res, next) {
+    app.use(function (req, res, next) {
         let err = new Error('Not Found');
         err.status = 404;
         next(err);
     });
- 
-    app.use(function(err, req, res, next) {
+
+    app.use(function (err, req, res, next) {
         if (res.headersSent) {
             return next(err);
         }
