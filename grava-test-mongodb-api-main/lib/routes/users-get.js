@@ -66,14 +66,14 @@ async function getWorkInformation(req, res) {
         const user = await User.findById(userId).populate('work');
 
         if (!user) {
-            return res.status(400).json({ error: 'El usuario no existe.' });
+            return res.status(400).json({ error: 'The user was not found.' });
         }
 
         const workInformation = user.work;
 
         return res.status(200).json({ work: workInformation });
     } catch (error) {
-        return res.status(500).json({ error: 'Error interno del servidor.' });
+        return res.status(500).json({ error: 'Internal error.' });
     }
 }
 

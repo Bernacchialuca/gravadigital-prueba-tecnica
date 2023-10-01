@@ -7,7 +7,7 @@ const { User, UserInformation, Work } = require('../models');
 function validateFields(req, res, next) {
 
     const schema = Joi.object({
-        color: Joi.string().valid('red', 'green', 'blue').required(),
+        color: Joi.string().valid('red', 'green', 'blue'),
         email: Joi.string().required().email(),
         enabled: Joi.boolean(),
         UserInformation: Joi.object({
@@ -108,15 +108,15 @@ async function disableUser(req, res) {
         const user = await User.findById(userId);
 
         if (!user || !user.enabled) {
-            return res.status(400).json({ error: 'El usuario no existe o ya está deshabilitado.' });
+            return res.status(400).json({ error: 'User does not exist or is already disabled.' });
         }
 
         user.enabled = false;
         await user.save();
 
-        return res.status(200).json({ message: 'Usuario deshabilitado con éxito.' });
+        return res.status(200).json({ message: 'User successfully disabled.' });
     } catch (error) {
-        return res.status(500).json({ error: 'Error interno del servidor.' });
+        return res.status(500).json({ error: `Internal error: ${error.message}` });
     }
 }
 
