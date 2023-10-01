@@ -59,6 +59,26 @@ async function sortUsers(req, res) {
 
 }
 
+async function getWorkInformation(req, res) {
+    try {
+        const userId = req.params.id;
+
+        const user = await User.findById(userId).populate('work');
+
+        if (!user) {
+            return res.status(400).json({ error: 'El usuario no existe.' });
+        }
+
+        const workInformation = user.work;
+
+        return res.status(200).json({ work: workInformation });
+    } catch (error) {
+        return res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+}
+
+
 router.get('/users/enabled', getUsers);
 router.get('/users/sort', sortUsers);
+router.get('/users/:id/workInformation', getWorkInformation);
 module.exports = router;

@@ -2,7 +2,7 @@
 const router = require('express').Router();
 const logger = require('../logger');
 const Joi = require('joi');
-const { User, UserInformation } = require('../models');
+const { User, UserInformation, Work } = require('../models');
 
 function validateFields(req, res, next) {
 
@@ -15,6 +15,11 @@ function validateFields(req, res, next) {
             lastName: Joi.string().required(),
             dni: Joi.string().required(),
             age: Joi.number()
+        }),
+        Work: Joi.object({
+            direction: Joi.string().required(),
+            position: Joi.string().required(),
+            workmode: Joi.string().valid('remote', 'hybrid', 'presential').required()
         })
     });
 
@@ -49,6 +54,27 @@ async function createUserInformation(req, res, next) {
     return false;
 }
 
+async function createWorkInformation(req, res, next) {
+
+    const body = req.body.Work;
+
+    try {
+        const result = await Work.create({
+            direction: body.direction,
+            position: body.position,
+            workmode: body.workmode
+        });
+
+        req.Work = result;
+        return next();
+
+    } catch (error) {
+        res.status(400).json({ 'message': error });
+    }
+
+    return false;
+}
+
 async function saveUser(req, res) {
 
     const body = req.body;
@@ -58,7 +84,8 @@ async function saveUser(req, res) {
             email: body.email,
             color: body.color,
             enabled: body.enabled,
-            userInformation: req.userInformation._id
+            userInformation: req.userInformation._id,
+            work: req.Work._id
         });
 
         await newUser.save();
@@ -75,27 +102,26 @@ async function saveUser(req, res) {
 
 async function disableUser(req, res) {
     try {
-        
+
         const userId = req.params.id;
-    
+
         const user = await User.findById(userId);
-    
+
         if (!user || !user.enabled) {
             return res.status(400).json({ error: 'El usuario no existe o ya está deshabilitado.' });
         }
-    
+
         user.enabled = false;
         await user.save();
-    
+
         return res.status(200).json({ message: 'Usuario deshabilitado con éxito.' });
     } catch (error) {
-        console.error('Error al deshabilitar usuario:', error);
         return res.status(500).json({ error: 'Error interno del servidor.' });
     }
 }
 
 
-router.post('/users', validateFields, createUserInformation, saveUser);
+router.post('/users', validateFields, createUserInformation, createWorkInformation, saveUser);
 router.post('/users/:id/disable', disableUser);
 
 module.exports = router;
