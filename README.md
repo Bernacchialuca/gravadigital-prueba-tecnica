@@ -1,1 +1,0 @@
-# gravadigital-prueba-tecnica
