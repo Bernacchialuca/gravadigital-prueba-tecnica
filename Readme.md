@@ -1,4 +1,15 @@
-# API test
+# API test - Luca Bernacchia
+
+## About Me
+
+Author: Luca Bernacchia
+<br>
+LinkedIn: https://www.linkedin.com/in/luca-bernacchia-0271121b5/
+
+
+## Set up
+
+Run `npm install` for initialize the project
 
 ## Configuration
 
