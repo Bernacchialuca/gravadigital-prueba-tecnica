@@ -14,7 +14,7 @@ async function getUsers(req, res) {
         return res.status(200).json(users);
 
     } catch (error) {
-        res.status(500).json({ message: 'Error when obtaining users.' });
+        res.status(500).json({ message: `Error when obtaining users: ${error}` });
     }
 
     return false;
@@ -52,7 +52,7 @@ async function sortUsers(req, res) {
         return res.status(200).json(users);
     } catch (error) {
   
-        res.status(500).json({ message: 'Error when sorting users.' });
+        res.status(500).json({ message: `Error when sorting users: ${error.message}` });
     }
 
     return false;
@@ -73,10 +73,9 @@ async function getWorkInformation(req, res) {
 
         return res.status(200).json({ work: workInformation });
     } catch (error) {
-        return res.status(500).json({ error: 'Internal error.' });
+        return res.status(500).json({ error: `Internal error: ${error.message}` });
     }
 }
-
 
 router.get('/users/enabled', getUsers);
 router.get('/users/sort', sortUsers);

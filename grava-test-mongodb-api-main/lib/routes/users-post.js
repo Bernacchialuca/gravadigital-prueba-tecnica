@@ -95,7 +95,7 @@ async function saveUser(req, res) {
         logger.error(`POST /users - saveUser error: ${error.message}`);
         res.status(500).json({
             code: 'internal_error',
-            message: 'Internal error'
+            message: `Internal error: ${error}`
         });
     }
 }
