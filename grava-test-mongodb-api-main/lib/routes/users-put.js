@@ -31,3 +31,4 @@ async function updateEmail(req, res) {
 
 router.put('/users/:id/updateEmail', updateEmail);
 module.exports = router;
+
